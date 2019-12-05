@@ -3,12 +3,15 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/index';
 import { Link } from 'react-router-dom';
 import Pagination from './Pagination';
+import './../css/Product.css';
+import Flash from './Flash';
 
 class AdminProducts extends Component {
   constructor(props) {
     super(props);
     this.state = {
       totalPage: 1,
+      messageFlash: ''
     }
   }
 
@@ -20,20 +23,37 @@ class AdminProducts extends Component {
   render() {
     const { currentPage, products, totalPage } = this.props;
     let arrPages = [];
+    let messageFlash = this.state.messageFlash;
 
     for(let page = 1; page <= totalPage; page++) {
       arrPages.push(page);
     }
 
+
+    const handleClickDelete = (event, productId, productName) => {
+      if (window.confirm('Confirm delete product "' + productName + '" ?')) {
+        event.preventDefault();
+        this.props.deleteProduct(productId, currentPage);
+        this.setState({ messageFlash: 'Deleted successfully' });
+      }
+    };
+
     const RowProduct = () => (products.map( product => (
       <tr key={product.id + product.name}>
         <th scope="row">{product.id}</th>
         <td>{product.category_name}</td>
-        <td><img src={product.image} alt={product.name} /></td>
+        <td className="img-product"><img src={product.image.url} alt={product.name} /></td>
         <td>{product.name}</td>
         <td>{product.price}</td>
         <td>{product.quantity}</td>
-        <td><Link to="#">Edit</Link></td>
+        <td><Link type="button" className="btn btn-primary" to={`/admin/products/${product.id}/`} >Edit</Link></td>
+        <td>
+          <button type="button" className="btn btn-danger" 
+            onClick={ event => handleClickDelete(event, product.id, product.name) }
+            data-toggle="modal">
+            Delete
+          </button>
+        </td>
       </tr>
     )));
 
@@ -42,11 +62,15 @@ class AdminProducts extends Component {
       this.props.fetchProducts({ page });
     };
 
-     return (
+    return (
       <div className="container">
-         <div className="row">
+        <div className="row">
           <div className="col-12">
             <h1 className="my-4 admin-title">Products</h1>
+            <Link type="button" to="/admin/products/new" className="btn btn-primary">Add new product</Link>
+            <br></br>
+            <br></br>
+            <Flash type="success" message={messageFlash} />
             <table className="table">
               <thead>
                 <tr>
@@ -56,7 +80,7 @@ class AdminProducts extends Component {
                   <th scope="col">Product's Name</th>
                   <th scope="col">Price</th>
                   <th scope="col">Quantity</th>
-                  <th scope="col">Edit</th>
+                  <th scope="col" colSpan="2">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,7 +118,12 @@ const mapStateToProps = state => {
     fetchProducts: (page) => {
       dispatch(actions.fetchProducts(page));
     },
-    setCurrentPage: page => dispatch(actions.setCurrentPage(page))
+    setCurrentPage: page => {
+      dispatch(actions.setCurrentPage(page))
+    },
+    deleteProduct: (productId, page) => {
+      dispatch(actions.deleteProduct({ productId: productId, page: page }))
+    }
   };
 };
 

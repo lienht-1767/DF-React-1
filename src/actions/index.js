@@ -51,3 +51,38 @@ export const logOut = () => {
 export const fetchAdminInfo = () => ({
   type: types.FETCH_ADMIN_INFO
 });
+
+export const fetchProduct = data => {
+  return {
+    type: types.EDIT_PRODUCT,
+    data
+  };
+};
+
+export const updateProduct = data => {
+  return {
+    type: types.UPDATE_PRODUCT,
+    data
+  };
+};
+
+export const deleteProduct= data => {
+  return {
+    type: types.DELETE_PRODUCT,
+    data
+  };
+};
+
+export const createProduct= data => {
+  return {
+    type: types.CREATE_PRODUCT,
+    data
+  };
+};
+
+export const newProduct= data => {
+  return {
+    type: types.NEW_PRODUCT,
+    data
+  };
+};

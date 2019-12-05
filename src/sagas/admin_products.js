@@ -1,10 +1,11 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 import * as types from './../constants/ActionTypes';
 import callApi from './call_api';
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* adminProductsSaga() {
   yield takeLatest(types.FECTH_PRODUCTS, workerSaga);
+  yield takeLatest(types.DELETE_PRODUCT, workerDeleteProductSaga);
 }
 
 // worker saga: makes the api call when watcher saga sees the action
@@ -16,10 +17,36 @@ function* workerSaga(action) {
 
     // dispatch a success action to the store with the new dog
     yield put({ type: types.FECTH_PRODUCTS_SUCCESS, data: result });
+    const selectCurrentPage = state => state.adminProducts.currentPage;
+    const currentPage = yield select(selectCurrentPage);
+    if (currentPage > result.total_pages)
+      yield put({
+        type: types.SET_CURRENT_PAGE,
+        currentPage: result.total_pages
+      });
   } catch (error) {
     // dispatch a failure action to the store with the error
     yield put({ type: types.FECTH_PRODUCTS_FAILURE, error });
   }
+}
+
+function* workerDeleteProductSaga(action) {
+  const { data } = action;
+  try {
+    const response = yield call(deleteProduct, data);
+    const result = response.data;
+
+    // dispatch a success action to the store with the new dog
+    yield put({ type: types.DELETE_PRODUCT_SUCCESS, data: result });
+  } catch (error) {
+    // dispatch a failure action to the store with the error
+    yield put({ type: types.DELETE_PRODUCT_FAILURE, error });
+  }
+}
+
+// function that makes the api request and returns a Promise for response
+function deleteProduct(data) {
+  return callApi('DELETE', 'products/' + data.productId, {page: data.page});
 }
 
 // function that makes the api request and returns a Promise for response
