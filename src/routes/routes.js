@@ -7,6 +7,8 @@ import Profile from '../components/Profile';
 import AdminProducts from '../components/AdminProducts';
 import AdminProductEdit from '../components/AdminProductEdit';
 import AdminProductNew from '../components/AdminProductNew';
+import Orders from '../components/Admin/Orders';
+import DetailOrders from '../components/Admin/DetailOrders';
 
 import App from './../App';
 import Admin from '../components/Admin/Admin';
@@ -39,6 +41,18 @@ const routerAdmin = [
     name: 'edit_product',
     exact: true,
     component: AdminProductEdit
+  },
+  {
+    path: '/admin/orders',
+    name: 'admin_orders',
+    exact: true,
+    component: Orders
+  },
+  {
+    path: '/admin/orders/:id',
+    name: 'detail_orders',
+    exact: true,
+    component: DetailOrders
   },
 ];
 

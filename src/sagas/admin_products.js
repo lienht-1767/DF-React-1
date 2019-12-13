@@ -4,7 +4,7 @@ import callApi from './call_api';
 
 // watcher saga: watches for actions dispatched to the store, starts worker saga
 export function* adminProductsSaga() {
-  yield takeLatest(types.FECTH_PRODUCTS, workerSaga);
+  yield takeLatest(types.FETCH_PRODUCTS, workerSaga);
   yield takeLatest(types.DELETE_PRODUCT, workerDeleteProductSaga);
 }
 
@@ -13,10 +13,11 @@ function* workerSaga(action) {
   const { data } = action;
   try {
     const response = yield call(fetchProducts, data);
+
     const result = response.data;
 
     // dispatch a success action to the store with the new dog
-    yield put({ type: types.FECTH_PRODUCTS_SUCCESS, data: result });
+    yield put({ type: types.FETCH_PRODUCTS_SUCCESS, data: result });
     const selectCurrentPage = state => state.adminProducts.currentPage;
     const currentPage = yield select(selectCurrentPage);
     if (currentPage > result.total_pages)
@@ -26,7 +27,7 @@ function* workerSaga(action) {
       });
   } catch (error) {
     // dispatch a failure action to the store with the error
-    yield put({ type: types.FECTH_PRODUCTS_FAILURE, error });
+    yield put({ type: types.FETCH_PRODUCTS_FAILURE, error });
   }
 }
 

@@ -37,7 +37,7 @@ export const updateProfile = data => {
 
 export const fetchProducts = data => {
   return {
-    type: types.FECTH_PRODUCTS,
+    type: types.FETCH_PRODUCTS,
     data
   };
 };
@@ -83,6 +83,34 @@ export const createProduct= data => {
 export const newProduct= data => {
   return {
     type: types.NEW_PRODUCT,
+    data
+  };
+};
+
+export const fetchOrders= data => {
+  return {
+    type: types.FETCH_ORDERS,
+    data
+  };
+};
+
+export const deleteOrder= data => {
+  return {
+    type: types.DELETE_ORDER,
+    data
+  };
+};
+
+export const fetchDetailOrders= data => {
+  return {
+    type: types.FETCH_DETAIL_ORDERS,
+    data
+  };
+};
+
+export const updateOrder= data => {
+  return {
+    type: types.UPDATE_ORDER,
     data
   };
 };

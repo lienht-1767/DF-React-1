@@ -115,8 +115,8 @@ const mapStateToProps = state => {
 
  const mapDispatchToProps = dispatch => {
   return {
-    fetchProducts: (page) => {
-      dispatch(actions.fetchProducts(page));
+    fetchProducts: (a) => {
+      dispatch(actions.fetchProducts(a));
     },
     setCurrentPage: page => {
       dispatch(actions.setCurrentPage(page))
